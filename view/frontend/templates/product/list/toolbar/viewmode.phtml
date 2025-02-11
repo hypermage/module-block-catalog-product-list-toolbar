@@ -1,0 +1,44 @@
+<?php
+
+use Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar\ViewMode as ViewModeViewModel;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Toolbar $block */
+/** @var Escaper $escaper */
+
+/** @var ViewModeViewModel $viewModeViewModel */
+$viewModeViewModel = $block->getData('view_mode_view_model');
+?>
+
+<?php if ($block->isEnabledViewSwitcher()): ?>
+    <div class="modes">
+        <?php $modes = $block->getModes(); ?>
+        <?php if ($modes && count($modes) > 1): ?>
+            <strong class="modes-label" id="modes-label">
+                <?= $escaper->escapeHtml(__('View as')) ?>
+            </strong>
+            <?php foreach ($block->getModes() as $code => $label): ?>
+                <?php if ($block->isModeActive($code)): ?>
+                    <strong title="<?= $escaper->escapeHtmlAttr($label) ?>"
+                            class="modes-mode active mode-<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                            data-value="<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                    >
+                        <span><?= $escaper->escapeHtml($label) ?></span>
+                    </strong>
+                <?php else : ?>
+                    <a class="modes-mode mode-<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                       title="<?= $escaper->escapeHtmlAttr($label) ?>"
+                       href="<?= $viewModeViewModel->getViewModeUrl($code) ?>"
+                       data-role="mode-switcher"
+                       data-value="<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                       id="mode-<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                       aria-labelledby="modes-label mode-<?= $escaper->escapeHtmlAttr(strtolower($code)) ?>"
+                    >
+                        <span><?= $escaper->escapeHtml($label) ?></span>
+                    </a>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

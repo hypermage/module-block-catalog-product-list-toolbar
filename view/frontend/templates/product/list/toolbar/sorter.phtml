@@ -1,0 +1,64 @@
+<?php
+
+use Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar\Sorter as ViewModelSorter;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Toolbar $block */
+/** @var Escaper $escaper */
+
+$blockId = uniqid($block->getNameInLayout());
+
+/** @var ViewModelSorter $sorterViewModel */
+$sorterViewModel = $block->getData('sorter_view_model');
+
+/** @var bool $useBoost */
+$useBoost = $block->getData('use_boost');
+
+$sorterHxParams = $useBoost
+    ? 'hx-get="/hypermage/redirect/redirect" hx-target="body" hx-push-url="true"'
+    : 'data-role="sorter"';
+?>
+
+<div class="toolbar-sorter sorter" id="<?= $escaper->escapeHtmlAttr($blockId) ?>">
+    <label class="sorter-label" for="sorter"><?= $block->escapeHtml(__('Sort By')) ?></label>
+    <select id="sorter" name="url" class="sorter-options" <?= $sorterHxParams ?>>
+        <?php foreach ($block->getAvailableOrders() as $key => $order) : ?>
+            <?php
+            $optionSelected = $block->isOrderCurrent($key);
+            $optionValue = $useBoost
+                ? $sorterViewModel->getSortUrl($key)
+                : $key;
+            ?>
+
+            <option value="<?= $escaper->escapeHtmlAttr($optionValue) ?>"
+                    <?php if ($optionSelected) : ?>selected="selected"<?php endif; ?>
+            >
+                <?= $block->escapeHtml(__($order)) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+
+    <span>
+        <?php if ($block->getCurrentDirection() == 'desc') : ?>
+            <a title="<?= $escaper->escapeHtmlAttr(__('Set Ascending Direction')) ?>"
+               href="<?= $sorterViewModel->getDirectionUrl('asc') ?>"
+               class="action sorter-action sort-desc"
+               data-role="direction-switcher"
+               data-value="asc"
+            >
+                <span><?= $escaper->escapeHtml(__('Set Ascending Direction')) ?></span>
+            </a>
+        <?php else : ?>
+            <a title="<?= $escaper->escapeHtmlAttr(__('Set Descending Direction')) ?>"
+               href="<?= $sorterViewModel->getDirectionUrl('desc') ?>"
+               class="action sorter-action sort-asc"
+               data-role="direction-switcher"
+               data-value="desc"
+               hx-disabled-elt="this, #sorter"
+            >
+                <span><?= $escaper->escapeHtml(__('Set Descending Direction')) ?></span>
+            </a>
+        <?php endif; ?>
+    </span>
+</div>

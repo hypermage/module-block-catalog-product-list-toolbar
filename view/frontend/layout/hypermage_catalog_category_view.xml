@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="product_list_toolbar">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">
+                    Hypermage_BlockCatalogProductListToolbar::product/list/toolbar.phtml
+                </argument>
+            </action>
+
+            <arguments>
+                <argument name="toolbar_view_model" xsi:type="object">
+                    Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar
+                </argument>
+            </arguments>
+
+            <block class="Magento\Catalog\Block\Product\ProductList\Toolbar"
+                   template="Hypermage_BlockCatalogProductListToolbar::product/list/toolbar/viewmode.phtml"
+                   name="product_list_toolbar.viewmode" as="viewmode">
+                <arguments>
+                    <argument name="view_mode_view_model" xsi:type="object">
+                        Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar\ViewMode
+                    </argument>
+                </arguments>
+            </block>
+
+            <block class="Magento\Catalog\Block\Product\ProductList\Toolbar"
+                   template="Hypermage_BlockCatalogProductListToolbar::product/list/toolbar/sorter.phtml"
+                   name="product_list_toolbar.sorter" as="sorter">
+                <arguments>
+                    <argument name="sorter_view_model" xsi:type="object">
+                        Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar\Sorter
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

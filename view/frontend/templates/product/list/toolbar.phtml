@@ -1,0 +1,34 @@
+<?php
+
+use Hypermage\BlockCatalogProductListToolbar\ViewModel\Toolbar as ToolbarViewModel;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Json\Helper\Data;
+
+/** @var Toolbar $block */
+
+/** @var ToolbarViewModel $toolbarViewModel */
+$toolbarViewModel = $block->getData('toolbar_view_model');
+
+$useBoost = $toolbarViewModel->getUseBoost();
+?>
+
+<?php if ($block->getCollection()->getSize()) : ?>
+    <?php
+    $widget = $this->helper(Data::class)->jsonDecode($block->getWidgetOptionsJson());
+    $widgetOptions = $this->helper(Data::class)->jsonEncode($widget['productListToolbarForm']);
+    ?>
+    <div class="toolbar toolbar-products" hx-boost="<?= $useBoost ? 'true' : 'false' ?>">
+        <?php if ($block->getIsBottom()): ?>
+            <?= $block->getPagerHtml() ?>
+            <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
+        <?php else: ?>
+            <?php if ($block->isExpanded()): ?>
+                <?= $block->getChildBlock('viewmode')->toHtml() ?>
+            <?php endif ?>
+            <?= $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
+            <?php if ($block->isExpanded()): ?>
+                <?= $block->getChildBlock('sorter')->setData('use_boost', $useBoost)->toHtml() ?>
+            <?php endif ?>
+        <?php endif ?>
+    </div>
+<?php endif ?>
